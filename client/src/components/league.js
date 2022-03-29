@@ -39,10 +39,10 @@ const League = (props) => {
                     )
                 )
                 const picks_value = picks.flat(2).reduce((acc, cur) => acc + parseInt(props.matchPick(cur.season, cur.round)), 0)
-                const qb_value = roster.players.filter(x => allPlayers[x].position === 'QB').reduce((acc, cur) => acc + Number(props.matchPlayer(cur)), 0)
-                const rb_value = roster.players.filter(x => allPlayers[x].position === 'RB').reduce((acc, cur) => acc + Number(props.matchPlayer(cur)), 0)
-                const wr_value = roster.players.filter(x => allPlayers[x].position === 'WR').reduce((acc, cur) => acc + Number(props.matchPlayer(cur)), 0)
-                const te_value = roster.players.filter(x => allPlayers[x].position === 'TE').reduce((acc, cur) => acc + Number(props.matchPlayer(cur)), 0)
+                const qb_value = roster.players === null ? 0 : roster.players.filter(x => allPlayers[x].position === 'QB').reduce((acc, cur) => acc + Number(props.matchPlayer(cur)), 0)
+                const rb_value = roster.players === null ? 0 : roster.players.filter(x => allPlayers[x].position === 'RB').reduce((acc, cur) => acc + Number(props.matchPlayer(cur)), 0)
+                const wr_value = roster.players === null ? 0 : roster.players.filter(x => allPlayers[x].position === 'WR').reduce((acc, cur) => acc + Number(props.matchPlayer(cur)), 0)
+                const te_value = roster.players === null ? 0 : roster.players.filter(x => allPlayers[x].position === 'TE').reduce((acc, cur) => acc + Number(props.matchPlayer(cur)), 0)
                 return {
                     ...roster,
                     qb_value: qb_value,
@@ -72,50 +72,50 @@ const League = (props) => {
                             <th colSpan={3}>Picks</th>
                             <th colSpan={3}>Breakdown</th>
                         </tr>
-                    </tbody>
-                    {league_display.rosters.sort((a, b) => b.total_value - a.total_value).map(roster =>
-                        <tbody key={roster.roster_id}>
-                            <tr onClick={() => showRoster(roster.roster_id)} className={roster.isRosterHidden === false ? 'hoverblack active' : 'hoverblack'}>
-                                <td><img className="thumbnail" alt={roster.username} src={roster.avatar === null ? emoji : `https://sleepercdn.com/avatars/${roster.avatar}`} /></td>
-                                <td colSpan={3} className="break">{roster.username}</td>
-                                <td colSpan={2}>{roster.settings.wins}-{roster.settings.losses}</td>
-                                <td colSpan={3}>
-                                    {roster.total_value.toLocaleString("en-US")}
-                                </td>
-                                <td colSpan={3}>
-                                    {roster.roster_value.toLocaleString("en-US")}
-                                </td>
-                                <td colSpan={3}>
-                                    {roster.picks_value.toLocaleString("en-US")}
-                                </td>
-                                <td colSpan={3}>
-                                    <p>QB: {roster.qb_value.toLocaleString("en-US")}</p>
-                                    <p>RB: {roster.rb_value.toLocaleString("en-US")}</p>
-                                    <p>WR: {roster.wr_value.toLocaleString("en-US")}</p>
-                                    <p>TE: {roster.te_value.toLocaleString("en-US")}</p>
-                                </td>
-                            </tr>
-                            {roster.isRosterHidden === false ?
-                                <tr className="roster">
-                                    <td colSpan={18}>
-                                        <Roster
-                                            roster={{
-                                                ...roster,
-                                                settings: {
-                                                    taxi_slots: league_display.settings.taxi_slots,
-                                                    reserve_slots: league_display.settings.reserve_slots
-                                                }
-                                            }}
-                                            matchPlayer={props.matchPlayer}
-                                            matchPick={props.matchPick}
-                                            hideSummary={true}
-                                        />
+                        {league_display.rosters.sort((a, b) => b.total_value - a.total_value).map(roster =>
+                            <>
+                                <tr key={roster.roster_id} onClick={() => showRoster(roster.roster_id)} className={roster.isRosterHidden === false ? 'hoverblack active' : 'hoverblack'}>
+                                    <td><img className="thumbnail" alt={roster.username} src={roster.avatar === null ? emoji : `https://sleepercdn.com/avatars/${roster.avatar}`} /></td>
+                                    <td colSpan={3} className="break">{roster.username}</td>
+                                    <td colSpan={2}>{roster.settings.wins}-{roster.settings.losses}</td>
+                                    <td colSpan={3}>
+                                        {roster.total_value.toLocaleString("en-US")}
+                                    </td>
+                                    <td colSpan={3}>
+                                        {roster.roster_value.toLocaleString("en-US")}
+                                    </td>
+                                    <td colSpan={3}>
+                                        {roster.picks_value.toLocaleString("en-US")}
+                                    </td>
+                                    <td colSpan={3}>
+                                        <p>QB: {roster.qb_value.toLocaleString("en-US")}</p>
+                                        <p>RB: {roster.rb_value.toLocaleString("en-US")}</p>
+                                        <p>WR: {roster.wr_value.toLocaleString("en-US")}</p>
+                                        <p>TE: {roster.te_value.toLocaleString("en-US")}</p>
                                     </td>
                                 </tr>
-                                : null
-                            }
-                        </tbody>
-                    )}
+                                {roster.isRosterHidden === false && roster.players !== null ?
+                                    <tr className="roster">
+                                        <td colSpan={18}>
+                                            <Roster
+                                                roster={{
+                                                    ...roster,
+                                                    settings: {
+                                                        taxi_slots: league_display.settings.taxi_slots,
+                                                        reserve_slots: league_display.settings.reserve_slots
+                                                    }
+                                                }}
+                                                matchPlayer={props.matchPlayer}
+                                                matchPick={props.matchPick}
+                                                hideSummary={true}
+                                            />
+                                        </td>
+                                    </tr>
+                                    : null
+                                }
+                            </>
+                        )}
+                    </tbody>
                 </table>
                 :
                 <table className="black smaller">

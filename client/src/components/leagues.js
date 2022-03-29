@@ -44,32 +44,31 @@ const Leagues = (props) => {
                     <th>WinPct</th>
                     <th colSpan={2}>Fantasy Points</th>
                 </tr>
-            </tbody>
-            {leagues.sort((a, b) => a.index > b.index ? 1 : -1).map(league =>
-                <tbody key={league.league_id}>
-                    <tr onClick={() => showRoster(league.league_id)} className={league.isRosterHidden ? 'hover' : 'hover active'}>
-                        <td><img alt={league.avatar} className="thumbnail" src={league.avatar === null ? emoji : `https://sleepercdn.com/avatars/${league.avatar}`} /></td>
-                        <td colSpan={3}>{league.name}</td>
-                        <td>{league.wins}-{league.losses}{league.ties > 0 ? `-${league.ties}` : null}</td>
-                        <td>{league.wins + league.losses > 0 ? (league.wins / (league.wins + league.losses)).toFixed(4) : '.0000'}</td>
-                        <td colSpan={2}>{Number(league.fpts).toLocaleString("en-US")} - {Number(league.fpts_against).toLocaleString("en-US")}</td>
-                    </tr>
-
-                    {league.isRosterHidden || league.userRoster.players === null ? null :
-                        <tr className='black'>
-                            <td colSpan={8}>
-                                <League
-                                    league={league}
-                                    user={props.user} 
-                                    matchPlayer={props.matchPlayer}
-                                    matchPick={props.matchPick}    
-                                />
-                            </td>
+                {leagues.sort((a, b) => a.index > b.index ? 1 : -1).map(league =>
+                    <>
+                        <tr key={league.league_id} onClick={() => showRoster(league.league_id)} className={league.isRosterHidden ? 'hover' : 'hover active'}>
+                            <td><img alt={league.avatar} className="thumbnail" src={league.avatar === null ? emoji : `https://sleepercdn.com/avatars/${league.avatar}`} /></td>
+                            <td colSpan={3}>{league.name}</td>
+                            <td>{league.wins}-{league.losses}{league.ties > 0 ? `-${league.ties}` : null}</td>
+                            <td>{league.wins + league.losses > 0 ? (league.wins / (league.wins + league.losses)).toFixed(4) : '.0000'}</td>
+                            <td colSpan={2}>{Number(league.fpts).toLocaleString("en-US")} - {Number(league.fpts_against).toLocaleString("en-US")}</td>
                         </tr>
-                    }
+                        {league.isRosterHidden ? null :
+                            <tr className='black'>
+                                <td colSpan={8}>
+                                    <League
+                                        league={league}
+                                        user={props.user}
+                                        matchPlayer={props.matchPlayer}
+                                        matchPick={props.matchPick}
+                                    />
+                                </td>
+                            </tr>
+                        }
+                    </>
 
-                </tbody>
-            )}
+                )}
+            </tbody>
         </table>
     </>
 }
