@@ -1,6 +1,8 @@
 const workerpool = require('workerpool')
 const axios = require('axios')
+const axiosRetry = require('axios-retry')
 
+axiosRetry(axios, { retries: 3 });
 const config = {
     headers: {
         'Content-Type': 'text/json'
@@ -18,7 +20,7 @@ const getDraftPicks = async (league, rosters, users, traded_picks_current, draft
         if (draft_current.draft_order === null) {
             draft_order = undefined
         } else {
-            const draft = await axios.get(`https://api.sleeper.app/v1/draft/${draft_current.draft_id}`)
+            const draft = await axios.get(`https://api.sleeper.app/v1/draft/${draft_current.draft_id}`, config, { timeout: 3000 }).catch(err => console.log(err))
             draft_order = draft.data.slot_to_roster_id
         }
 
@@ -29,8 +31,8 @@ const getDraftPicks = async (league, rosters, users, traded_picks_current, draft
     let i = draft_season
     while (previous_league_id > 0 && i <= parseInt(league.season) + 2) {
         const [picks, prev_league] = await Promise.all([
-            await axios.get(`https://api.sleeper.app/v1/league/${previous_league_id}/traded_picks`),
-            await axios.get(`https://api.sleeper.app/v1/league/${previous_league_id}`)
+            await axios.get(`https://api.sleeper.app/v1/league/${previous_league_id}/traded_picks`, config, { timeout: 3000 }).catch(err => console.log(err)),
+            await axios.get(`https://api.sleeper.app/v1/league/${previous_league_id}`, config, { timeout: 3000 }).catch(err => console.log(err))
         ])
         traded_picks.push(picks.data.filter(x => parseInt(x.season) >= draft_season))
         previous_league_id = prev_league.data.previous_league_id
@@ -91,22 +93,24 @@ const getDraftPicks = async (league, rosters, users, traded_picks_current, draft
 }
 
 const getLeagues = async (username, season) => {
-    const state = await axios.get(`https://api.sleeper.app/v1/state/nfl`)
+    const state = await axios.get(`https://api.sleeper.app/v1/state/nfl`, config, { timeout: 3000 }).catch(err => console.log(err))
     let user;
     try {
-        user = await axios.get(`https://api.sleeper.app/v1/user/${username}`, config, { timeout: 3000 })
+        user = await axios.get(`https://api.sleeper.app/v1/user/${username}`, config, { timeout: 3000 }).catch(err => console.log(err))
     } catch (error) {
         return (error)
     }
     const leagues = []
-    const l = await axios.get(`https://api.sleeper.app/v1/user/${user.data.user_id}/leagues/nfl/${season}`, config, { timeout: 3000 })
+    const l = await axios.get(`https://api.sleeper.app/v1/user/${user.data.user_id}/leagues/nfl/${season}`, config, { timeout: 3000 }).catch(err => console.log(err))
     await Promise.all(l.data.map(async (league, index) => {
+
         let [rosters, users, traded_picks, drafts] = await Promise.all([
-            await axios.get(`https://api.sleeper.app/v1/league/${league.league_id}/rosters`, config, { timeout: 3000 }),
-            await axios.get(`https://api.sleeper.app/v1/league/${league.league_id}/users`, config, { timeout: 3000 }),
-            await axios.get(`https://api.sleeper.app/v1/league/${league.league_id}/traded_picks`, config, { timeout: 3000 }),
-            await axios.get(`https://api.sleeper.app/v1/league/${league.league_id}/drafts`, config, { timeout: 3000 })
+            await axios.get(`https://api.sleeper.app/v1/league/${league.league_id}/rosters`, config, { timeout: 3000 }).catch(err => console.log(err)),
+            await axios.get(`https://api.sleeper.app/v1/league/${league.league_id}/users`, config, { timeout: 3000 }).catch(err => console.log(err)),
+            await axios.get(`https://api.sleeper.app/v1/league/${league.league_id}/traded_picks`, config, { timeout: 3000 }).catch(err => console.log(err)),
+            await axios.get(`https://api.sleeper.app/v1/league/${league.league_id}/drafts`, config, { timeout: 3000 }).catch(err => console.log(err))
         ])
+
         let draft_picks = await getDraftPicks(league, rosters.data, users.data, traded_picks.data, drafts.data)
         rosters = rosters.data.map(roster => {
             const prev_wins = roster === undefined || roster.metadata === null || roster.metadata.record === undefined ? null : roster.metadata.record.match(/W/g) === null ? 0 : roster.metadata.record.match(/W/g).length

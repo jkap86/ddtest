@@ -11,7 +11,7 @@ const View = () => {
     const params = useParams()
     const [activeTab, setActiveTab] = useState('Values')
     const [filters, setFilters] = useState({ 'r_d': 'All', 'b_s': 'All' })
-    const [dv, setDV] = useState({ players: [], picks: []})
+    const [dv, setDV] = useState({ players: [], picks: [] })
     const [user, setUser] = useState({})
     const [leagues, setLeagues] = useState([])
 
@@ -123,7 +123,6 @@ const View = () => {
                         username: params.username
                     }
                 })
-                console.log(d.data)
                 l.map(league => {
                     return league.drafts = d.data.flat().filter(x => x !== null && x.league_id === league.league_id)
                 })
@@ -166,11 +165,14 @@ const View = () => {
                 })
             })
         }).flat(2)
-        const all_active_players = Object.keys(allPlayers).filter(x => x === x.trim() && allPlayers[x].status === 'Active').map(allPlayer => {
+        let all_active_players = []
+        const ap_keys = Object.keys(allPlayers).filter(x => x === x.trim() && allPlayers[x].active === true)
+
+        ap_keys.map(allPlayer => {
             const p = players.find(x => x.id === allPlayer)
             let leagues_unowned = playersAll.filter(x => x.id === allPlayer)
             if (p) {
-                return({
+                all_active_players.push({
                     ...p,
                     leagues_taken: leagues_unowned,
                     leagues_available: leagues.filter(x =>
@@ -178,7 +180,7 @@ const View = () => {
                         leagues_unowned.find(y => y.league.league_id === x.league_id) === undefined)
                 })
             } else {
-                return({
+                all_active_players.push({
                     id: allPlayer,
                     dv: matchPlayer(allPlayer),
                     count: 0,
@@ -199,8 +201,10 @@ const View = () => {
                 })
             }
         })
+
+
         console.log(all_active_players.sort((a, b) => b.count - a.count))
-        return all_active_players.flat()
+        return all_active_players
     }
     const players = useMemo(() => getPlayers(leagues), [leagues])
 
