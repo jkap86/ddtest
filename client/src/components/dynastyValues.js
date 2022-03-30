@@ -58,7 +58,7 @@ const DynastyValues = (props) => {
                 let max = Math.max(...json.map(player => player.value))
                 let min = Math.min(...json.map(player => player.value))
                 json.map(player => {
-                    const value = player.value !== undefined ? parseInt((player.value - min) / (max - min) * 10000) : startup_values.find(x => x.Rank === player.Rank).Value
+                    const value = player.value > 0 ? parseInt((player.value - min) / (max - min) * 10000) : startup_values.find(x => x.Rank === player.Rank).Value
                     const searchName = player.name.replace(/[^0-9a-z]/gi, '').toLowerCase()
                     const id = Object.keys(allPlayers).find(x => allPlayers[x].position === player.position &&
                         (allPlayers[x].search_full_name === searchName ||

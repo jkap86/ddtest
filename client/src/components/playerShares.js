@@ -86,7 +86,7 @@ const PlayerShares = (props) => {
         setPlayers([...p])
 
     }
-
+    console.log(players.sort((a, b) => b.count - a.count))
     return <>
         <div className="checkboxes">
             <label className="script">
