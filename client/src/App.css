@@ -309,3 +309,7 @@ tr.hoverblack:hover div.leaguewrapper p {
 tr.rosters {
   vertical-align: top;
 }
+.roster_player {
+  white-space: nowrap;
+  overflow: scroll;
+}

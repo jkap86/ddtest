@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import emoji from '../emoji.png';
 import Roster from './roster';
+import SearchLeaguemate from './searchLeaguemate';
 
 const Leaguemates = (props) => {
     const [leaguemates, setLeaguemates] = useState([])
@@ -49,8 +50,8 @@ const Leaguemates = (props) => {
     return <>
         <br />
         <br />
-        <h2>{leaguemates.filter(x => x.isLeaguemateHidden === false).length} Leaguemates</h2>
-        
+        <h2>{leaguemates.length} Leaguemates</h2>
+        <SearchLeaguemate sendLeaguemate={getLeaguemate} leaguemates={leaguemates.map(leaguemate => leaguemate.username)}  />
         <table className='main'>
             <tbody>
                 <tr>
