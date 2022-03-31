@@ -35,13 +35,15 @@ const Homepage = () => {
     return <>
         <div className="App">
             <h1>Dynasty Dashboard</h1>
+            <br /><br />
             <div className='searchwrapper'>
                 <div className="search">
                     <div className="searchitem">
-                        <label>Username:</label>
                         <input
                             type="text"
-                            onBlur={getUser} />
+                            placeholder='username'
+                            onBlur={getUser} 
+                        />
                     </div>
                     <Link to={username === null ? '/' : `/${username}`}>
                         <button type="submit">Submit</button>

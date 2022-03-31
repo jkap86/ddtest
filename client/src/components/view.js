@@ -137,9 +137,9 @@ const View = () => {
             return null
         } else {
             if (dv.players.find(x => x.searchName === allPlayers[player].search_full_name && x.position === allPlayers[player].position)) {
-                return dv.players.find(x => x.searchName === allPlayers[player].search_full_name).updated_value
+                return parseInt(dv.players.find(x => x.searchName === allPlayers[player].search_full_name).updated_value)
             } else if (dv.players.find(x => allPlayers[player].search_full_name !== undefined && x.searchName.slice(-5, -2) === allPlayers[player].search_full_name.slice(-5, -2) && x.searchName.slice(0, 3) === allPlayers[player].search_full_name.slice(0, 3) && x.position === allPlayers[player].position)) {
-                return dv.players.find(x => x.searchName.slice(-5, -2) === allPlayers[player].search_full_name.slice(-5, -2) && x.searchName.slice(0, 3) === allPlayers[player].search_full_name.slice(0, 3)).updated_value
+                return parseInt(dv.players.find(x => x.searchName.slice(-5, -2) === allPlayers[player].search_full_name.slice(-5, -2) && x.searchName.slice(0, 3) === allPlayers[player].search_full_name.slice(0, 3)).updated_value)
             } else {
                 return 0
             }

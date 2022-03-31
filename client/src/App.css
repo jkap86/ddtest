@@ -12,6 +12,19 @@ h2, h4 {
   filter: brightness(1.5);
   text-shadow: 0 0 .1em var(--fourth-color);
 }
+.link {
+  text-decoration: none;
+  color: var(--fifth-color);
+}
+div.search {
+  width: fit-content;
+  margin: auto;
+}
+div.searchwrapper {
+  width: fit-content;
+  margin: auto;
+  text-align: center;
+}
 div.navcontainer {
   display: flex;
   flex-direction: row;
@@ -51,6 +64,7 @@ input[type="file"] {
 input[type="text"] {
   border-radius: 1em;
   font-weight: 900;
+  font-size: 125%;
   text-align: center;
   background-color: var(--fourth-color);
   padding: .5em 0;
@@ -59,6 +73,15 @@ input[type="text"] {
 div.page_nav {
   width: fit-content;
   margin: auto;
+}
+button[type="submit"] {
+  padding: 1em;
+  font-weight: 900;
+  border-radius: 1.5em;
+  background-color: var(--third-color);
+  color: var(--fourth-color);
+  cursor: pointer;
+  border: .25em solid var(--fourth-color);
 }
 button.page_toggle, button.rostertab, button.leaguetab {
   display: inline;

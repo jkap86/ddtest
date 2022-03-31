@@ -153,7 +153,7 @@ const DynastyValues = (props) => {
                             />
                         </label>
                     </button>
-                    <button onClick={() => clearFile()}>Clear File</button>
+                    <button onClick={() => clearFile()}>Clear</button>
                 </caption>
                 <tbody>
                     <tr>

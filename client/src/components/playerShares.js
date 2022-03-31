@@ -124,7 +124,7 @@ const PlayerShares = (props) => {
                 </tr>
             </tbody>
 
-            {players.filter(x => x.isPlayerHidden === false && !filters.positions.includes(allPlayers[x.id].position)).sort((a, b) => parseInt(b[sortBy]) > parseInt(a[sortBy]) ? 1 : -1).slice(
+            {players.filter(x => x.isPlayerHidden === false && !filters.positions.includes(allPlayers[x.id].position)).sort((a, b) => b[sortBy] - a[sortBy]).slice(
                     0, players.filter(x => x.count > 0).length).map(player =>
                         <tbody key={player.id}>
                             <tr name={player.id} onClick={() => showLeagues(player.id)} className={player.isLeaguesHidden === true ? 'hover' : 'hover active'} >
