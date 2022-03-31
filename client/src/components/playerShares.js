@@ -89,6 +89,8 @@ const PlayerShares = (props) => {
     }
     console.log(players.sort((a, b) => b.count - a.count))
     return <>
+        <br />
+        <h2>Player Shares</h2>
         <div className="checkboxes">
             <label className="script">
                 QB
@@ -107,7 +109,6 @@ const PlayerShares = (props) => {
                 <input name="TE" onChange={filterPosition} defaultChecked type="checkbox" />
             </label>
         </div>
-        <h2>Player Shares</h2>
         <SearchPlayer sendPlayer={getPlayer} />
         <table className="main">
             <tbody>

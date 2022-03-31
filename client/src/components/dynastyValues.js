@@ -11,6 +11,20 @@ const DynastyValues = (props) => {
     const [dvFile, setDVFile] = useState(null)
     const [dv_display, setDV_display] = useState({ players: [], picks: [] })
     const [activeTab, setActiveTab] = useState('Players')
+    const [filters, setFilters] = useState({
+        positions: []
+    })
+
+    const filterPosition = (e) => {
+        let f = filters.positions
+        if (e.target.checked) {
+            const index = f.indexOf(e.target.name)
+            f.splice(index, 1)
+        } else {
+            f.push(e.target.name)
+        }
+        setFilters({ ...filters, positions: f })
+    }
 
     const updateValue = (player_id, updated_value, type) => {
         const dv = type === 'players' ? dv_display.players : dv_display.picks
@@ -107,7 +121,24 @@ const DynastyValues = (props) => {
             <button className={activeTab === 'Players' ? 'page_toggle active' : 'page_toggle'} onClick={() => setActiveTab('Players')}>Players</button>
             <button className={activeTab === 'Picks' ? 'page_toggle active' : 'page_toggle'} onClick={() => setActiveTab('Picks')}>Picks</button>
         </div>
-
+        <div className="checkboxes">
+            <label className="script">
+                QB
+                <input name="QB" onChange={filterPosition} defaultChecked type="checkbox" />
+            </label>
+            <label className="script">
+                RB
+                <input name="RB" onChange={filterPosition} defaultChecked type="checkbox" />
+            </label>
+            <label className="script">
+                WR
+                <input name="WR" onChange={filterPosition} defaultChecked type="checkbox" />
+            </label>
+            <label className="script">
+                TE
+                <input name="TE" onChange={filterPosition} defaultChecked type="checkbox" />
+            </label>
+        </div>
 
         {activeTab === 'Players' ?
             <table className='main'>
@@ -134,7 +165,7 @@ const DynastyValues = (props) => {
                             <th className='clickable' onClick={() => sortUser('players')}>You</th>
                         }
                     </tr>
-                    {dv_display.players.map(dv =>
+                    {dv_display.players.filter(x => !filters.positions.includes(x.position)).map(dv =>
                         <tr className='hover' key={dv.name}>
                             <td>
                                 <img

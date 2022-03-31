@@ -67,7 +67,7 @@ const Leaguemates = (props) => {
                     <th colSpan={2}>WinPct</th>
                 </tr>
             </tbody>
-            {leaguemates.filter(x => x.isLeaguemateHidden === false).sort((a, b) => b.count - a.count).slice(0, 50).map(leaguemate =>
+            {leaguemates.filter(x => x.isLeaguemateHidden === false).sort((a, b) => b.count - a.count).map(leaguemate =>
                 <tbody key={leaguemate.id}>
                     <tr onClick={() => showLeagues(leaguemate.id)} className={leaguemate.isLeaguesHidden ? 'hover' : 'hover active'}>
                         <td><img className='thumbnail' src={leaguemate.avatar === null ? emoji : `https://sleepercdn.com/avatars/${leaguemate.avatar}`} /></td>

@@ -6,6 +6,7 @@ import DynastyValues from './dynastyValues';
 import Leagues from './leagues';
 import allPlayers from '../allplayers.json';
 import PlayerShares from './playerShares';
+import Leaguemates from './leaguemates';
 
 const View = () => {
     const params = useParams()
@@ -68,6 +69,68 @@ const View = () => {
             }
         })
         return playersOccurences
+    }
+    const findOccurencesLeaguemates = (leaguemates) => {
+        const lmOcurrences = []
+        leaguemates.forEach(lm => {
+            const index = lmOcurrences.findIndex(obj => {
+                return obj.id === lm.owner_id
+            })
+            if (index === -1) {
+                lmOcurrences.push({
+                    id: lm.owner_id,
+                    username: lm.username,
+                    isLeaguemateHidden: false,
+                    count: 1,
+                    avatar: lm.avatar,
+                    isLeaguesHidden: true,
+                    leagues: [{
+                        league_id: lm.league_id,
+                        name: lm.league_name,
+                        userWins: lm.userWins,
+                        userLosses: lm.userLosses,
+                        userTies: lm.userTies,
+                        avatar: lm.league_avatar,
+                        wins: lm.settings.wins,
+                        losses: lm.settings.losses,
+                        ties: lm.settings.ties,
+                        isRostersHidden: true,
+                        lmRoster: lm,
+                        userRoster: lm.userRoster,
+                        isRostersHidden: true
+                    }],
+                    userWins: lm.userWins,
+                    userLosses: lm.userLosses,
+                    userTies: lm.userTies,
+                    wins: lm.settings.wins,
+                    losses: lm.settings.losses,
+                    ties: lm.settings.ties,
+                })
+            } else {
+                lmOcurrences[index].leagues.push({
+                    league_id: lm.league_id,
+                    name: lm.league_name,
+                    userWins: lm.userWins,
+                    userLosses: lm.userLosses,
+                    userTies: lm.userTies,
+                    avatar: lm.league_avatar,
+                    wins: lm.settings.wins,
+                    losses: lm.settings.losses,
+                    ties: lm.settings.ties,
+                    userRoster: lm.userRoster,
+                    lmRoster: lm,
+                    isRostersHidden: true
+                })
+                lmOcurrences[index].count++
+                lmOcurrences[index].userWins = lmOcurrences[index].userWins + lm.userWins
+                lmOcurrences[index].userLosses = lmOcurrences[index].userLosses + lm.userLosses
+                lmOcurrences[index].userTies = lmOcurrences[index].userTies + lm.userTies
+                lmOcurrences[index].wins = lmOcurrences[index].wins + lm.settings.wins
+                lmOcurrences[index].losses = lmOcurrences[index].losses + lm.settings.losses
+                lmOcurrences[index].ties = lmOcurrences[index].ties + lm.settings.ties
+            }
+        })
+        return lmOcurrences.sort((a, b) => a.leagues.length - b.leagues.length)
     }
     const matchPlayer = (player) => {
         if (player === '0') {
@@ -224,11 +287,32 @@ const View = () => {
     }
     const players = useMemo(() => getPlayers(leagues), [leagues])
 
-
-
-
-
-
+    let leaguemates = leagues.filter(x => x.isLeagueHidden === false).map(league => {
+        return league.rosters.map(roster => {
+            return {
+                ...roster,
+                username: roster.username,
+                avatar: roster.avatar,
+                league_avatar: league.avatar,
+                league_name: league.name,
+                league_id: league.league_id,
+                reserve_slots: league.reserve_slots,
+                taxi_slots: league.taxi_slots,
+                userWins: league.wins,
+                userLosses: league.losses,
+                userTies: league.ties,
+                userRoster: {
+                    ...league.userRoster,
+                    players: league.userRoster.players === undefined ? [] : league.userRoster.players,
+                    taxi: league.userRoster.taxi === undefined ? [] : league.userRoster.taxi,
+                    reserve: league.userRoster.reserve === undefined ? [] : league.userRoster.reserve,
+                    taxi_slots: league.taxi_slots,
+                    reserve_slots: league.reserve_slots
+                }
+            }
+        })
+    }).flat()
+    leaguemates = findOccurencesLeaguemates(leaguemates)
 
     return <>
         <Link className="link" to="/">Home</Link>
@@ -256,6 +340,12 @@ const View = () => {
         <div hidden={activeTab === 'Players' ? false : true}>
             {leagues.length > 0 ?
                 <PlayerShares players={players} matchPlayer={matchPlayer} matchPick={matchPick} />
+                : <h1>Loading...</h1>
+            }
+        </div>
+        <div hidden={activeTab === 'Leaguemates' ? false : true}>
+            {leaguemates.length > 0 ?
+                <Leaguemates leaguemates={leaguemates} matchPick={matchPick} matchPlayer={matchPlayer} />
                 : <h1>Loading...</h1>
             }
         </div>

@@ -48,6 +48,14 @@ button.active {
 input[type="file"] {
   display: none;
 }
+input[type="text"] {
+  border-radius: 1em;
+  font-weight: 900;
+  text-align: center;
+  background-color: var(--fourth-color);
+  padding: .5em 0;
+  border: .25em solid var(--third-color);
+} 
 div.page_nav {
   width: fit-content;
   margin: auto;
@@ -234,4 +242,70 @@ div.roundrow {
 }
 tr.active2 {
   background-color: var(--secondary-color);
+}
+div.checkboxes {
+  width: fit-content;
+  margin: auto;
+  text-align: center;
+  margin-top: 2em;
+}
+input[type="checkbox"] {
+  appearance: none;
+  color: currentColor;
+  background-color: var(--third-color);
+  margin: .5em;
+  font: inherit;
+  width: 1.15em;
+  height: 1.15em;
+  border: .05em solid var(--secondary-color);
+  border-radius: .15em;
+  display: grid;
+  place-content: center;
+  box-shadow: inset 0 0 .25em var(--primary-color), 0 0 .25em var(--fifth-color);
+}
+input[type="checkbox"]::before {
+  content: "";
+  width: .65em;
+  height: .65em;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em var(--fourth-color);
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+input[type="checkbox"]:checked::before {
+  transform: scale(1.2);
+}
+label.script {
+  display: inline-flex;
+  flex-direction: column;
+  margin: .25em 1em;
+  text-shadow: 0 0 .1em var(--third-color);
+}
+div.leaguewrapper {
+  width: fit-content;
+  margin: auto;
+}
+div.leaguewrapper img, div.leaguewrapper p {
+  display: block;
+  margin: auto;
+}
+div.leaguewrapper p {
+  transform: translateY(-2em);
+  height: fit-content;
+  width: fit-content;
+  text-shadow: 0 0 1.5em var(--third-color);
+  color: var(--fourth-color);
+  font-weight: 900;
+  filter: brightness(2);
+}
+div.leaguewrapper img {
+  filter: brightness(0.25);
+}
+tr.hoverblack:hover div.leaguewrapper p {
+  color: var(--third-color);
+  text-shadow: 0 0 .5em var(--secondary-color);
+  filter: brightness(2);
+}
+tr.rosters {
+  vertical-align: top;
 }
