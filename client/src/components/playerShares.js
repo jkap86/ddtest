@@ -2,6 +2,7 @@ import { useState } from 'react';
 import allPlayers from '../allplayers.json';
 import emoji from '../emoji.png';
 import Roster from './roster';
+import SearchPlayer from './searchPlayer';
 
 const PlayerShares = (props) => {
     const [players, setPlayers] = useState([])
@@ -34,7 +35,7 @@ const PlayerShares = (props) => {
             })
         } else {
             p.filter(x => x.id === player_id).map(player => {
-                return player.leagues_taken.filter(x => x.league.league_id === league_id).map(league => {
+                return player.leagues_taken.filter(x => x.league_id === league_id).map(league => {
                     return league.isRosterHidden = league.isRosterHidden === undefined ? false : !league.isRosterHidden
                 })
             })
@@ -107,6 +108,7 @@ const PlayerShares = (props) => {
             </label>
         </div>
         <h2>Player Shares</h2>
+        <SearchPlayer sendPlayer={getPlayer} />
         <table className="main">
             <tbody>
                 <tr>
@@ -121,9 +123,7 @@ const PlayerShares = (props) => {
                 </tr>
             </tbody>
 
-            {players.filter(x => x.isPlayerHidden === false && allPlayers[x.id].age >= filters.age[0] && allPlayers[x.id].age <= filters.age[1] &&
-                allPlayers[x.id].years_exp >= filters.yearsExp[0] && allPlayers[x.id].years_exp <= filters.yearsExp[1] &&
-                !filters.positions.includes(allPlayers[x.id].position)).sort((a, b) => parseInt(b[sortBy]) > parseInt(a[sortBy]) ? 1 : -1).slice(
+            {players.filter(x => x.isPlayerHidden === false && !filters.positions.includes(allPlayers[x.id].position)).sort((a, b) => parseInt(b[sortBy]) > parseInt(a[sortBy]) ? 1 : -1).slice(
                     0, players.filter(x => x.count > 0).length).map(player =>
                         <tbody key={player.id}>
                             <tr name={player.id} onClick={() => showLeagues(player.id)} className={player.isLeaguesHidden === true ? 'hover' : 'hover active'} >
@@ -213,9 +213,9 @@ const PlayerShares = (props) => {
 
                                                     {player.leagues_taken.sort((a, b) => a.index - b.index).map(league =>
                                                         <tbody>
-                                                            <tr className='hoverblack' key={league.id + league.league.league_id} onClick={() => showRoster(player.id, league.league.league_id, false)}>
-                                                                <td colSpan={2}><img className='thumbnail' alt={league.league.avatar} src={league.league.avatar === null ? emoji : `https://sleepercdn.com/avatars/${league.league.avatar}`} /></td>
-                                                                <td colSpan={5}>{league.league.name}</td>
+                                                            <tr className='hoverblack' key={league.id + league.league_id} onClick={() => showRoster(player.id, league.league_id, false)}>
+                                                                <td colSpan={2}><img className='thumbnail' alt={league.avatar} src={league.avatar === null ? emoji : `https://sleepercdn.com/avatars/${league.avatar}`} /></td>
+                                                                <td colSpan={5}>{league.name}</td>
                                                                 <td colSpan={4}>{league.roster.username}</td>
                                                                 <td colSpan={2}>
                                                                     {league.roster.starters.includes(player.id) ? 'Starter' :
@@ -223,20 +223,20 @@ const PlayerShares = (props) => {
                                                                             league.roster.reserve !== null && league.roster.reserve.includes(player.id) ? 'IR' : 'Bench'
                                                                     }
                                                                 </td>
-                                                                <td colSpan={3}>{league.league.wins}-{league.league.losses}{league.league.ties > 0 ?`-${league.league.ties}` : null}</td>
-                                                                <td colSpan={3}>{league.league.fpts === null ? 0 : Number(league.league.fpts.toFixed(2)).toLocaleString("en-US")}</td>
-                                                                <td colSpan={3}>{league.league.fpts_against === null ? 0 : Number(league.league.fpts_against.toFixed(2)).toLocaleString("en-US")}</td>
+                                                                <td colSpan={3}>{league.wins}-{league.losses}{league.ties > 0 ?`-${league.ties}` : null}</td>
+                                                                <td colSpan={3}>{league.fpts === null ? 0 : Number(league.fpts.toFixed(2)).toLocaleString("en-US")}</td>
+                                                                <td colSpan={3}>{league.fpts_against === null ? 0 : Number(league.fpts_against.toFixed(2)).toLocaleString("en-US")}</td>
                                                             </tr>
                                                             {league.isRosterHidden === undefined || league.isRosterHidden === true ? null :
                                                                 <tr className='rosters'>
                                                                     <td colSpan={11}>
-                                                                        {league.league.rosters.find(x => x.players.includes(player.id)) === undefined ? null :
+                                                                        {league.rosters.find(x => x.players.includes(player.id)) === undefined ? null :
                                                                             <Roster
                                                                                 roster={{
-                                                                                    ...league.league.rosters.find(x => x.players.includes(player.id)),
+                                                                                    ...league.rosters.find(x => x.players.includes(player.id)),
                                                                                     settings: {
-                                                                                        taxi_slots: league.league.settings.taxi_slots,
-                                                                                        reserve_slots: league.league.settings.reserve_slots
+                                                                                        taxi_slots: league.settings.taxi_slots,
+                                                                                        reserve_slots: league.settings.reserve_slots
                                                                                     }
                                                                                 }}
                                                                                 matchPlayer={props.matchPlayer}
@@ -248,10 +248,10 @@ const PlayerShares = (props) => {
 
                                                                         <Roster
                                                                             roster={{
-                                                                                ...league.league.userRoster,
+                                                                                ...league.userRoster,
                                                                                 settings: {
-                                                                                    taxi_slots: league.league.settings.taxi_slots,
-                                                                                    reserve_slots: league.league.settings.reserve_slots
+                                                                                    taxi_slots: league.settings.taxi_slots,
+                                                                                    reserve_slots: league.settings.reserve_slots
                                                                                 }
                                                                             }}
                                                                             matchPlayer={props.matchPlayer}

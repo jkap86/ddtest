@@ -155,8 +155,11 @@ const View = () => {
                 return roster.players.map(player => {
                     return {
                         id: player,
-                        league: league,
-                        roster: roster,
+                        league: {
+                            ...league,
+                            roster: roster
+                        },
+                        rosters: league.rosters,
                         fpts: 0,
                         fpts_against: 0,
                         wins: 0,
@@ -167,58 +170,23 @@ const View = () => {
                 })
             })
         }).flat(2)
-        
-        /*
-        let all_active_players = []
-        const ap_keys = Object.keys(allPlayers).filter(x => x === x.trim() && allPlayers[x].active === true)
 
-        ap_keys.map(allPlayer => {
-            const p = players.find(x => x.id === allPlayer)
-            let leagues_unowned = playersAll.filter(x => x.id === allPlayer)
-            if (p) {
-                all_active_players.push({
-                    ...p,
-                    leagues_taken: leagues_unowned,
-                    leagues_available: leagues.filter(x =>
-                        p.leagues.find(y => y.league_id === x.league_id) === undefined &&
-                        leagues_unowned.find(y => y.league.league_id === x.league_id) === undefined)
-                })
-            } else {
-                all_active_players.push({
-                    id: allPlayer,
-                    dv: matchPlayer(allPlayer),
-                    count: 0,
-                    yearsExp: allPlayers[allPlayer].years_exp,
-                    leagues: [],
-                    leagues_taken: leagues_unowned,
-                    leagues_available: leagues.filter(x =>
-                        leagues_unowned.find(y => y.league.league_id === x.league_id) === undefined),
-                    wins: 0,
-                    losses: 0,
-                    ties: 0,
-                    winpct: 0,
-                    fpts: 0,
-                    fpts_against: 0,
-                    sortName: allPlayers[allPlayer].last_name + " " + allPlayers[allPlayer].first_name + " " + allPlayers[allPlayer].position + " " + allPlayers[allPlayer].team,
-                    isLeaguesHidden: true,
-                    isPlayerHidden: true
-                })
-            }
-        })
-        */
-        
+
         players = players.map(player => {
-            let leagues_unowned = playersAll.filter(x => x.id === player.id)
+            let leagues_unowned = playersAll.filter(x => x.id === player.id).map(league_uo => {
+                return league_uo.league
+            })
             return {
                 ...player,
                 leagues: player.leagues,
                 leagues_taken: leagues_unowned,
                 leagues_available: leagues.filter(x =>
                     player.leagues.find(y => y.league_id === x.league_id) === undefined &&
-                    leagues_unowned.find(y => y.league.league_id === x.league_id) === undefined) 
+                    leagues_unowned.find(y => y.league_id === x.league_id) === undefined)
             }
         })
         playersAll = findOccurences(playersAll)
+        console.log(playersAll)
         playersAll = playersAll.map(playerAll => {
             return {
                 ...playerAll,
@@ -230,8 +198,28 @@ const View = () => {
 
             }
         })
-        console.log([...players, ...playersAll].sort((a, b) => b.count - a.count))
-        return players
+        const x = Object.keys(allPlayers).filter(x => allPlayers[x].status === 'Active' && x === x.trim()).map(allPlayer => {
+            return {
+                id: allPlayer,
+                count: 0,
+                leagues: [],
+                leagues_taken: [],
+                leagues_available: leagues,
+                fpts: 0,
+                fpts_against: 0,
+                wins: 0,
+                losses: 0,
+                ties: 0,
+                winpct: 0,
+                isPlayerHidden: false,
+                isLeaguesHidden: true
+            }
+        })
+        return [
+            ...players, 
+            ...playersAll.filter(x => players.find(y => y.id === x.id) === undefined),
+            ...x.filter(x => players.find(y => x.id === y.id) === undefined && playersAll.find(y => x.id === y.id) === undefined)
+        ]
 
     }
     const players = useMemo(() => getPlayers(leagues), [leagues])
