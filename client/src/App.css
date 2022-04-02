@@ -1,6 +1,7 @@
 h1, h2, h3, h4, h5 {
   width: fit-content;
   margin: auto;
+  text-align: center;
 }
 h1, h3 {
   color: var(--third-color);
@@ -165,7 +166,7 @@ tr.hover:hover, tr.active{
   cursor: pointer;
   background-color: var(--third-color);
   color: var(--fifth-color);
-  text-shadow: 0 0 .25em var(--primary-color);
+  text-shadow: 0 0 .1em var(--primary-color);
   box-shadow: 0 0 .5em var(--fifth-color);
 }
 tr.hover:hover img.thumbnail, tr.hover.active img.thumbnail {
@@ -324,12 +325,12 @@ div.leaguewrapper p {
 div.leaguewrapper img {
   filter: brightness(0.25);
 }
-tr.hoverblack:hover div.leaguewrapper p {
+tr.hoverblack:hover div.leaguewrapper p, tr.hoverblack.active div.leaguewrapper p {
   color: var(--third-color);
   text-shadow: 0 0 .5em var(--secondary-color);
   filter: brightness(2);
 }
-tr.rosters {
+tr.roster {
   vertical-align: top;
 }
 .roster_player {

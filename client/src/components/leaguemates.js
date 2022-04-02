@@ -100,7 +100,7 @@ const Leaguemates = (props) => {
                                     </tbody>
                                     {leaguemate.leagues.map((league, index) =>
                                         <tbody key={index + '' + league.id}>
-                                            <tr onClick={() => showRosters(leaguemate.id, league.league_id)} className={'hoverblack'}>
+                                            <tr onClick={() => showRosters(leaguemate.id, league.league_id)} className={league.isRostersHidden ? 'hoverblack' : 'hoverblack active'}>
                                                 <td>{league.wins}-{league.losses}{league.ties > 0 ? `-${league.ties}` : null}</td>
                                                 <td>{league.wins + league.losses > 0 ? Number(league.wins / (league.losses + league.wins)).toFixed(4).toLocaleString("en-US") : '.0000'}</td>
                                                 <td colSpan={2}>
@@ -114,7 +114,7 @@ const Leaguemates = (props) => {
                                             </tr>
 
                                             {league.isRostersHidden ? null :
-                                                <tr className='rosters'>
+                                                <tr className='roster'>
                                                     <td colSpan={3}>
                                                         <Roster
                                                             roster={{

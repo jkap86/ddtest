@@ -163,7 +163,7 @@ const PlayerShares = (props) => {
                                                 </tbody>
                                                 {player.leagues.sort((a, b) => a.index - b.index).map(league =>
                                                     <tbody>
-                                                        <tr className="hoverblack" key={league.league_id} onClick={() => showRoster(player.id, league.league_id)}>
+                                                        <tr className={league.isRosterHidden === true ? 'hoverblack' : 'hoverblack active'} key={league.league_id} onClick={() => showRoster(player.id, league.league_id)}>
                                                             <td><img className="thumbnail" alt={league.avatar} src={league.avatar === null ? emoji : `https://sleepercdn.com/avatars/${league.avatar}`} /></td>
                                                             <td colSpan={5}>{league.name}</td>
                                                             <td colSpan={2}>
@@ -177,7 +177,7 @@ const PlayerShares = (props) => {
                                                             <td colSpan={3}>{league.fpts === null ? 0 : Number(league.fpts_against.toFixed(2)).toLocaleString("en-US")}</td>
                                                         </tr>
                                                         {league.isRosterHidden === undefined || league.isRosterHidden === true ? null :
-                                                            <tr>
+                                                            <tr className='roster'>
                                                                 <td colSpan={16}>
                                                                     {league.rosters.find(x => x.players.includes(player.id)) === undefined ? null :
                                                                         <Roster
@@ -214,7 +214,7 @@ const PlayerShares = (props) => {
 
                                                     {player.leagues_taken.sort((a, b) => a.index - b.index).map(league =>
                                                         <tbody>
-                                                            <tr className='hoverblack' key={league.id + league.league_id} onClick={() => showRoster(player.id, league.league_id, false)}>
+                                                            <tr className={league.isRosterHidden === true ? 'hoverblack' : 'hoverblack active'} key={league.id + league.league_id} onClick={() => showRoster(player.id, league.league_id, false)}>
                                                                 <td colSpan={2}><img className='thumbnail' alt={league.avatar} src={league.avatar === null ? emoji : `https://sleepercdn.com/avatars/${league.avatar}`} /></td>
                                                                 <td colSpan={5}>{league.name}</td>
                                                                 <td colSpan={4}>{league.roster.username}</td>
@@ -229,7 +229,7 @@ const PlayerShares = (props) => {
                                                                 <td colSpan={3}>{league.fpts_against === null ? 0 : Number(league.fpts_against.toFixed(2)).toLocaleString("en-US")}</td>
                                                             </tr>
                                                             {league.isRosterHidden === undefined || league.isRosterHidden === true ? null :
-                                                                <tr className='rosters'>
+                                                                <tr className='roster'>
                                                                     <td colSpan={11}>
                                                                         {league.rosters.find(x => x.players.includes(player.id)) === undefined ? null :
                                                                             <Roster
