@@ -5,6 +5,7 @@ import emoji from '../emoji.png';
 
 const League = (props) => {
     const [activeTab, setActiveTab] = useState('Rosters')
+    const [sortBy, setSortBy] = useState('total_value')
     const [league, setLeague] = useState()
     if (props.league !== league) setLeague(props.league)
 
@@ -67,12 +68,12 @@ const League = (props) => {
                             <th></th>
                             <th colSpan={3}>Username</th>
                             <th colSpan={2}>Record</th>
-                            <th colSpan={3}>Total Value</th>
-                            <th colSpan={3}>Roster</th>
-                            <th colSpan={3}>Picks</th>
+                            <th colSpan={3} className='clickable' onClick={() => setSortBy('total_value')}>Total Value</th>
+                            <th colSpan={3} className='clickable' onClick={() => setSortBy('roster_value')}>Roster</th>
+                            <th colSpan={3} className='clickable' onClick={() => setSortBy('picks_value')}>Picks</th>
                             <th colSpan={3}>Breakdown</th>
                         </tr>
-                        {league_display.rosters.sort((a, b) => b.total_value - a.total_value).map(roster =>
+                        {league_display.rosters.sort((a, b) => b[sortBy] - a[sortBy]).map(roster =>
                             <>
                                 <tr key={roster.roster_id} onClick={() => showRoster(roster.roster_id)} className={roster.isRosterHidden === false ? 'hoverblack active' : 'hoverblack'}>
                                     <td><img className="thumbnail" alt={roster.username} src={roster.avatar === null ? emoji : `https://sleepercdn.com/avatars/${roster.avatar}`} /></td>
