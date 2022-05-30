@@ -1,14 +1,13 @@
-import { useState, useEffect } from 'react';
-import emoji from '../emoji.png';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { Link } from 'react-router-dom'
 import axios from 'axios';
+import { motion } from 'framer-motion';
 
 const Homepage = () => {
-    const [username, setUsername] = useState(null)
-    const [season, setSeason] = useState(0)
+    const [username, setUsername] = useState('')
 
     const getUser = async (e) => {
-        const user = await axios.get(`/user`, {
+        const user = await axios.get('/user', {
             params: {
                 username: e.target.value
             }
@@ -16,42 +15,31 @@ const Homepage = () => {
         if (typeof (user.data) === 'object') {
             setUsername(e.target.value)
         } else {
-            setUsername(null)
-            alert('Username Not Found')
+            setUsername('')
         }
     }
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const getNfl = async () => {
-                const nfl = await axios.get('/nfl')
-                setSeason(nfl.data.league_season)
-            }
-            await getNfl()
-        }
-        fetchData()
-    })
-
     return <>
-        <div className="App">
-            <h1>Dynasty Dashboard</h1>
+        <motion.h1
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 5 }}
+        >
+            Dynasty Dashboard
+        </motion.h1>
+        <br /><br />
+        <div className="search_wrapper">
+            <input 
+                type="text"
+                placeholder="username"
+                onChange={getUser}
+            />
             <br /><br />
-            <div className='searchwrapper'>
-                <div className="search">
-                    <div className="searchitem">
-                        <input
-                            type="text"
-                            placeholder='username'
-                            onBlur={getUser} 
-                        />
-                    </div>
-                    <Link to={username === null ? '/' : `/${username}`}>
-                        <button type="submit">Submit</button>
-                    </Link>
-                </div>
-                <div className="imgcontainer"><img alt="emoji" className="main" src={emoji} /></div>
-            </div>
-
+            {username === '' ? null : 
+                <Link to={`/${username}`}>
+                    <button type="submit">Submit</button>
+                </Link>
+            }
         </div>
     </>
 }

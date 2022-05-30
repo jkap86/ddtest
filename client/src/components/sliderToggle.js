@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './sliderToggle.css';
+
 
 const SliderToggle = (props) => {
     const [selection, setSelection] = useState({ [props.name]: props.active })
@@ -12,13 +12,13 @@ const SliderToggle = (props) => {
         props.sendSelection(selection)
     }, [selection])
 
-    return <span className="sliderwrapper">
+    return <div className="slider">
         {props.names.map(name =>
             <span key={name} id={name} className={selection[props.name] === name ? 'selected' : 'option'}>
-                <a name={name} onClick={slide}>{name}</a>
+                <button className='clickable' name={name} onClick={slide}>{name}</button>
             </span>
         )}
-    </span>
+    </div>
 }
 
 export default SliderToggle;

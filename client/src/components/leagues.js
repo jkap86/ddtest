@@ -1,6 +1,7 @@
-import { useState } from "react"
+import React, { useState } from 'react';
 import emoji from '../emoji.png';
 import League from './league';
+import { motion } from 'framer-motion';
 
 const Leagues = (props) => {
     const [leagues, setLeagues] = useState([])
@@ -35,38 +36,48 @@ const Leagues = (props) => {
                 </tr>
             </tbody>
         </table>
-        <table className="main">
+        <table className='main'>
             <tbody>
                 <tr>
-                    <th></th>
-                    <th colSpan={3}>League</th>
+                    <th colSpan={4}>League</th>
                     <th>Record</th>
-                    <th>WinPct</th>
+                    <th>Win Pct</th>
                     <th colSpan={2}>Fantasy Points</th>
                 </tr>
-                {leagues.sort((a, b) => a.index > b.index ? 1 : -1).map(league =>
-                    <>
-                        <tr key={league.league_id} onClick={() => showRoster(league.league_id)} className={league.isRosterHidden ? 'hover' : 'hover active'}>
-                            <td><img alt={league.avatar} className="thumbnail" src={league.avatar === null ? emoji : `https://sleepercdn.com/avatars/${league.avatar}`} /></td>
-                            <td colSpan={3}>{league.name}</td>
+                {leagues.sort((a, b) => a.index - b.index).map((league, index) =>
+                    <React.Fragment key={index}>
+                        <tr onClick={() => showRoster(league.league_id)} className={league.isRosterHidden ? 'hover clickable' : 'hover clickable active'}>
+                            <td>
+                                <motion.img
+                                    animate={{ rotate: 360 }}
+                                    transition={{ 
+                                        repeat: Infinity, 
+                                        duration: Math.random() * 10 + 2 
+                                    }}
+                                    alt='avatar'
+                                    className='thumbnail'
+                                    src={league.avatar === null ? emoji : `https://sleepercdn.com/avatars/${league.avatar}`}
+                                />
+                            </td>
+                            <td colSpan={3} className='left'>{league.name}</td>
                             <td>{league.wins}-{league.losses}{league.ties > 0 ? `-${league.ties}` : null}</td>
                             <td>{league.wins + league.losses > 0 ? (league.wins / (league.wins + league.losses)).toFixed(4) : '.0000'}</td>
                             <td colSpan={2}>{Number(league.fpts).toLocaleString("en-US")} - {Number(league.fpts_against).toLocaleString("en-US")}</td>
                         </tr>
-                        {league.isRosterHidden ? null :
-                            <tr className='black'>
+                        {league.isRosterHidden ? null : 
+                            <tr key={index + '_league'}>
                                 <td colSpan={8}>
                                     <League
+                                        allPlayers={props.allPlayers}
                                         league={league}
-                                        user={props.user}
-                                        matchPlayer={props.matchPlayer}
+                                        getValue={props.getValue}
                                         matchPick={props.matchPick}
+                                        getProjection={props.getProjection}
                                     />
                                 </td>
                             </tr>
                         }
-                    </>
-
+                    </React.Fragment>
                 )}
             </tbody>
         </table>

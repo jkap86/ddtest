@@ -1,7 +1,152 @@
+.App {
+  text-align: center;
+}
+.clickable:hover {
+  cursor: pointer;
+}
+.updated_value.modified {
+  outline: .5em solid var(--third-color);
+}
+.updated_value {
+  border: none;
+}
+button.nav {
+  background-color: var(--third-color);
+  border: .25em solid var(--secondary-color);
+  border-radius: 1.5em;
+  color: var(--fifth-color);
+  font-size: 100%;
+  font-weight: 900;
+  margin: .25em;
+  padding: 1em;
+}
+button.active {
+  background-color: var(--secondary-color);
+  outline: 2px solid var(--fourth-color);
+}
+table.summary {
+  background-color: var(--secondary-color);
+  border-radius: 2em;
+  border-spacing: 1em;
+  font-weight: 700;
+  margin: 2em auto;
+  max-width: 500px;
+  min-width: 250px;
+  width: fit-content;
+  outline: 2px solid var(--fourth-color);
+}
+
+table.main {
+  background-color: var(--secondary-color);
+  border-spacing: 0;
+  border-radius: 2em;
+  margin: auto;
+  max-width: 1000px;
+  min-width: 250px;
+  padding: .5em;
+  table-layout: fixed;
+  text-shadow: 0 0 .2em var(--third-color);
+  width: 95%;
+  outline: 2px solid var(--fourth-color);
+  box-shadow: inset 0 0 2em var(--primary-color);
+}
+table.main > tbody > tr > th {
+  color: var(--third-color);
+}
+table.main > tbody > tr {
+  box-shadow: 0 0 .5em var(--primary-color);
+}
+
+table.secondary {
+  border-spacing: 0;
+  width: 100%;
+  table-layout: fixed;
+  background-color: var(--primary-color);
+}
+table.secondary > tbody > tr {
+  box-shadow: 0 0 0.5em var(--fifth-color);
+}
+tr.tertiary {
+  background-color: var(--third-color);
+  color: var(--secondary-color);
+  vertical-align: top;
+}
+tr.hover:hover, tr.active {
+  background-color: var(--fifth-color);
+  color: var(--third-color);
+}
+tr.hover_black:hover, tr.hover_black.active {
+  background-color: var(--fourth-color);
+  color: var(--third-color)
+}
+td.left, div.roster_player {
+  text-align: left;
+}
+tr.roster_player:hover {
+  background-color: var(--primary-color);
+  color: var(--fourth-color);
+  text-shadow: unset;
+}
+div.roster_player img, div.roster_player p {
+  display: inline;
+  vertical-align: middle;
+}
+img.thumbnail {
+  width: 3em;
+  height: 3em;
+  object-fit: cover;
+  border-radius: 2em;
+  border: .25em solid var(--third-color);
+  box-shadow: 0 0 .25em var(--fifth-color);
+}
+input.updated_value {
+  width: 50%;
+}
+table.rostercolumn {
+  border-spacing: 0;
+  display: inline-flex;
+  margin: 0.5em;
+  background-color: var(--fourth-color);
+}
+table.rostercolumn > tbody > tr {
+  box-shadow: 0 0 .5em var(--primary-color);
+}
+div.picks_season {
+  display: inline-block;
+  vertical-align: top;
+  text-align: left;
+  margin: .5em;
+}
+em {
+  color: var(--fourth-color);
+  font-weight: 900;
+  text-shadow: none;
+}
+.black {
+  background-color: black;
+  opacity: .95;
+}
+p.draft_pick:hover {
+  background-color: var(--primary-color);
+  color: var(--fifth-color)
+}
+
+input {
+  width: 10em;
+  margin: auto;
+  text-align: center;
+  padding: .5em 1em;
+  font-weight: 900;
+  background-color: var(--fourth-color);
+  color: var(--third-color);
+  font-size: 1em;
+  border: unset;
+}
 h1, h2, h3, h4, h5 {
   width: fit-content;
   margin: auto;
   text-align: center;
+  height: fit-content;
 }
 h1, h3 {
   color: var(--third-color);
@@ -13,259 +158,49 @@ h2, h4 {
   filter: brightness(1.5);
   text-shadow: 0 0 .1em var(--fourth-color);
 }
-.link {
+.link, button.navbutton {
   text-decoration: none;
   color: var(--fifth-color);
+  background-color: transparent;
+  border: none;
 }
-div.search {
-  width: fit-content;
-  margin: auto;
+.link {
+  float: left;
 }
-div.searchwrapper {
-  width: fit-content;
-  margin: auto;
-  text-align: center;
+button.navbutton {
+  float: right;
+  font-weight: 900;
 }
-div.navcontainer {
+button.navbutton.active {
+  background-color: var(--fourth-color);
+  color: var(--third-color);
+}
+.slidercontainer {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
   justify-content: center;
-  background-color: var(--fourth-color);
-  width: fit-content;
-  margin: 0 auto 2em auto;
-  border-radius: 1em;
-  box-shadow: inset 0 0 1em var(--primary-color), 0 0 .25em var(--fifth-color);
-  border: .15em solid var(--third-color);
-}
-button.nav {
-  cursor: pointer;
+  font-size: 100%;
   padding: 1em;
-  font-weight: 900;
-  color: var(--fifth-color);
-  background-color: var(--third-color);
-  text-shadow: 0 0 .1em var(--secondary-color);
-  box-shadow: 0 0 .5em var(--primary-color), inset 0 0 .75em var(--primary-color);
-  border: .25em solid var(--secondary-color);
-  border-radius: 1.5em;
-  font-size: 100%;
-  margin: .25em;
 }
-button.active {
-  background-color: var(--secondary-color);
-  color: var(--fifth-color);
-  text-shadow: 0 0 .1em var(--third-color);
-  font-weight: 900;
-  border: .25em solid var(--third-color);
-  border-radius: 1.5em;
-}
-input[type="file"] {
-  display: none;
-}
-input[type="text"] {
-  border-radius: 1em;
-  font-weight: 900;
-  font-size: 125%;
-  text-align: center;
-  background-color: var(--fourth-color);
-  padding: .5em 0;
-  border: .25em solid var(--third-color);
-} 
-div.page_nav {
-  width: fit-content;
-  margin: auto;
-}
-button[type="submit"] {
-  padding: 1em;
-  font-weight: 900;
-  border-radius: 1.5em;
-  background-color: var(--third-color);
-  color: var(--fourth-color);
-  cursor: pointer;
-  border: .25em solid var(--fourth-color);
-}
-button.page_toggle, button.rostertab, button.leaguetab {
-  display: inline;
-  margin: 1em 3em;
-  background-color: inherit;
-  border: unset;
-  padding: .5em;
-  color: var(--fourth-color);
-  text-shadow: 0 0 .25em var(--secondary-color);
-  filter: brightness(2);
-  font-weight: 900;
-  font-size: 125%;
-  cursor: pointer;
-}
-button.page_toggle.active, button.rostertab.activetab, button.leaguetab.active {
-  background-color: var(--fourth-color);
-  color: var(--third-color);
-  text-shadow: 0 0 .1em var(--primary-color);
-  border-radius: 2em;
-  box-shadow: inset 0 0 4em var(--primary-color), 0 0 .25em var(--fifth-color);
-  border: .25em solid var(--secondary-color);
-}
-caption > button {
-  cursor: pointer;
-  padding: .5em;
-  font-size: 75%;
-  font-weight: 900;
-  color: var(--third-color);
-  background-color: var(--fifth-color);
-  text-shadow: 0 0 .1em var(--primary-color);
-  box-shadow: 0 0 .5em var(--primary-color), inset 0 0 .75em var(--primary-color);
-  border: .1em solid var(--fourth-color);
-  border-radius: 1.5em;
-  font-size: 100%;
-  margin: .25em;
-}
-table.summary {
-  width: fit-content;
-  margin: 2em auto 2em auto;
-  background-color: var(--secondary-color);
-  color: var(--fourth-color);
-  text-align: center;
-  font-weight: 700;
-  border-radius: 2em;
-  border: .25em solid var(--third-color);
-  box-shadow: 0 0 .25em var(--fifth-color), inset 0 0 1.25em var(--primary-color);
-  text-shadow: 0 0 .25em var(--third-color);
-  border-spacing: 1em;
-}
-table.main {
-  background-color: var(--secondary-color);
-  margin: auto;
-  width: 95vw; 
-  max-width: 1250px; 
-  padding: 0 0 1em 0;
-  border-radius: 2em;
-  text-shadow: 0 0 .1em var(--third-color);
-  border: .15em solid var(--fourth-color);
-  text-align: center;
-  border-collapse: separate;
-  border-spacing: 0 0;
-  box-shadow: 0 0 .75em var(--third-color), inset 0 0 2em var(--primary-color);
-  table-layout: fixed;
-}
-table.main th, table.black th {
-  color: var(--third-color);
-  padding: 1em .5em;
-  filter: brightness(1.5);
-}
-table.main th {
-  text-shadow: 0 0 .1em var(--primary-color);
-}
-table.black th {
-  text-shadow: 0 0 .1em var(--secondary-color);
-}
-tr.hover {
-  box-shadow: inset 0 0 1em var(--primary-color);
-  height: 4em;
-}
-tr.hover:hover, tr.active{
-  cursor: pointer;
-  background-color: var(--third-color);
-  color: var(--fifth-color);
-  text-shadow: 0 0 .1em var(--primary-color);
-  box-shadow: 0 0 .5em var(--fifth-color);
-}
-tr.hover:hover img.thumbnail, tr.hover.active img.thumbnail {
-  border: .25em solid var(--fourth-color);
-  box-shadow: 0 0 .25em var(--fourth-color);
-}
-img.thumbnail {
-  width: 3em;
-  height: 3em;
-  object-fit: cover;
-  border-radius: 50%;
-  border: .25em solid var(--third-color);
-  box-shadow: 0 0 .25em var(--fifth-color);
-}
-input.updated_dv {
-  border-radius: 2em;
-  border: .1em solid var(--primary-color);
-  padding: .25em;
-  font-size: 100%;
-  width: 4em;
-  font-weight: 900;
-  text-align: center;
-  background-color: var(--fourth-color);
-  color: var(--third-color);
-  box-shadow: inset 0 0 1em var(--primary-color), 0 0 1em var(--primary-color);
-}
-tr.black {
-  background-color: var(--primary-color);
-  box-shadow: inset 0 0 1em var(--third-color);
-  text-shadow: 0 0 .1em var(--third-color);
-}
-table.black {
-  border-collapse: separate;
-  border-spacing: 0;
-  width: 100%;
-  table-layout: fixed;
-  
-}
-tr.hoverblack {
-  box-shadow: inset 0 0 1em var(--secondary-color);
-  height: 4em;
-}
-tr.hoverblack:hover, tr.hoverblack.active {
-  background-color: var(--fourth-color);
-  color: var(--third-color);
-  font-weight: 900;
-  box-shadow: unset;
-  cursor: pointer;
-}
-tr.roster {
-  box-shadow: inset 0 0 1em var(--fourth-color);
-}
-div.leagueplayers, div.positionplayers {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-div.rostercolumn {
-  margin: 0 1.5em;
-  min-width: 25%;
-}
-div.roster_player img, div.roster_player p {
-  display: inline;
-  margin: auto;
-  vertical-align: middle;
-  
-}
-div.roster_player {
-  height: 4em;
-  text-align: left;
-}
-div.picks_season {
-  display: inline-block;
-  vertical-align: top;
+.slider {
   margin: 1em;
+  border-radius: 2em;
+  background-color: var(--third-color);
+  border: .25em solid var(--fourth-color);
 }
-.modified {
-  outline: .25em solid var(--third-color);
+span.option button {
+  border: none;
+  background: transparent;
 }
-.clickable {
-  cursor: pointer;
+span.option button, span.selected button {
+  font-size: 100%;
+  padding: 1em;
+  color: var(--fifth-color);font-weight: 900;
 }
-.smaller {
-  font-size: 85%;
-}
-em.dv {
-  color: var(--fourth-color);
-  filter: brightness(2);
-  text-shadow: none;
-  font-weight: 900;
-}
-div.roundrow {
-  display: inline-flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-tr.active2 {
+span.selected button {
+  border-radius: 2em;
+  border: .25em solid var(--fourth-color);
   background-color: var(--secondary-color);
+  box-shadow: 0 0 1em var(--primary-color);
 }
 div.checkboxes {
   width: fit-content;
@@ -305,35 +240,56 @@ label.script {
   margin: .25em 1em;
   text-shadow: 0 0 .1em var(--third-color);
 }
-div.leaguewrapper {
-  width: fit-content;
-  margin: auto;
+input.fileupload {
+  display: none;
 }
-div.leaguewrapper img, div.leaguewrapper p {
-  display: block;
-  margin: auto;
-}
-div.leaguewrapper p {
-  transform: translateY(-2em);
-  height: fit-content;
-  width: fit-content;
-  text-shadow: 0 0 1.5em var(--third-color);
-  color: var(--fourth-color);
-  font-weight: 900;
-  filter: brightness(2);
-}
-div.leaguewrapper img {
-  filter: brightness(0.25);
-}
-tr.hoverblack:hover div.leaguewrapper p, tr.hoverblack.active div.leaguewrapper p {
+label.file {
+  padding: 1em;
+  background-color: var(--fifth-color);
+  border-radius: 2em;
   color: var(--third-color);
-  text-shadow: 0 0 .5em var(--secondary-color);
-  filter: brightness(2);
+  font-weight: 900;
+  border: .25em solid var(--fourth-color);
+  box-shadow: inset 0 0 1em var(--primary-color);
 }
-tr.roster {
-  vertical-align: top;
+button.file {
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  margin-right: 2em;
 }
-.roster_player {
-  white-space: nowrap;
-  overflow: scroll;
+button.clear {
+  background-color: var(--fifth-color);
+  padding: 1em;
+  border-radius: 2em;
+  color: var(--third-color);
+  font-weight: 900;
+  border: .25em solid var(--fourth-color);
+  box-shadow: inset 0 0 1em var(--primary-color);
+}
+button.rostertab, button.player_leagues {
+  padding: 1em;
+  background-color: transparent;
+  border: none;
+  font-weight: 900;
+  color: var(--fifth-color);
+  margin: 1em;
+}
+button.rostertab.active {
+  background-color: var(--secondary-color);
+}
+button.player_leagues.active {
+  background-color: var(--fourth-color);
+  color: var(--third-color);
+}
+h4.roster {
+  color: var(--fourth-color);
+  text-shadow: 0 0 .25em var(--secondary-color);
+  margin-top: 1em;
+  font-size: 125%;
+}
+p.header {
+  font-weight: 900;
+  color: var(--fifth-color);
+  text-shadow: 0 0 .5em var(--primary-color);
 }

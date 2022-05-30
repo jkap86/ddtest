@@ -131,9 +131,9 @@ const getLeagues = async (username, season) => {
         })
         let userRoster = rosters.find(x => x.owner_id === user.data.user_id)
         if (userRoster !== undefined) {
-            const prev_wins_user = userRoster.metadata === null ? null : userRoster.metadata === undefined ? 0 : userRoster.metadata.record.match(/W/g).length
-            const prev_losses_user = userRoster.metadata === null ? null : userRoster.metadata.record.match(/L/g) === null ? 0 : userRoster.metadata.record.match(/L/g).length
-            const prev_ties_user = userRoster.metadata === null ? null : userRoster.metadata.record.match(/T/g) === null ? 0 : userRoster.metadata.record.match(/T/g).length
+            const prev_wins_user = userRoster.metadata === null ? null : userRoster.metadata === undefined || userRoster.metadata.record === undefined ? 0 : userRoster.metadata.record.match(/W/g).length
+            const prev_losses_user = userRoster.metadata === null ? null : userRoster.metadata === undefined || userRoster.metadata.record === undefined ? 0 : userRoster.metadata.record.match(/L/g).length
+            const prev_ties_user = userRoster.metadata === null ? null : userRoster.metadata === undefined || userRoster.metadata.record === undefined ? 0 : userRoster.metadata.record.match(/T/g) === null ? 0 : userRoster.metadata.record.match(/T/g).length
             leagues.push({
                 avatar: league.avatar,
                 bestball: league.settings.best_ball === 1 ? 'BestBall' : 'Standard',

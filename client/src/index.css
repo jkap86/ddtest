@@ -11,6 +11,6 @@
 
 @media only screen and (max-width: 600px) {
   :root {
-    font-size: xx-small;
+    font-size: 50%;
   }
 }

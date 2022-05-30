@@ -12,49 +12,55 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.resolve(__dirname, '../client/build')));
 
-axiosRetry(axios, { 
-	retries: 3,
-	retryCondition: (error) => {
-		return error.response.status === 404
-	} 
-});
-
-app.get('/nfl', async (req, res) => {
-	const nfl = await axios.get(`https://api.sleeper.app/v1/state/nfl`, { timeout: 3000 }).catch(err => console.log(err))
-	res.send(nfl.data)
+const getAllPlayers = async () => {
+    let allplayers = await axios.get('https://api.sleeper.app/v1/players/nfl', { timeout: 3000 })
+	let activePlayers = []
+    
+	app.set('allplayers', allplayers.data)
+}
+getAllPlayers()
+setInterval(getAllPlayers, 1000 * 60 * 60 * 24)
+app.get('/allplayers', async (req, res) => {
+    res.send(app.settings.allplayers)
 })
 
 app.get('/user', async (req, res) => {
 	const username = req.query.username
 	try {
-		const user = await axios.get(`https://api.sleeper.app/v1/user/${username}`, { timeout: 3000 }).catch(err => console.log(err))
+		const user = await axios.get(`https://api.sleeper.app/v1/user/${username}`, { timeout: 3000 })
 		res.send(user.data)
 	} catch (error) {
 		res.send(error)
 	}
 })
-
-app.get('/dynastyvalues', async (req, res) => {
-	const pool = workerpool.pool(__dirname + '/workerDV.js')
-	const result = await pool.exec('getDynastyValues')
-	res.send(result)
+app.get('/playerinfo', async (req, res) => {
+    const pool_qb_proj = workerpool.pool(__dirname + '/workerPlayerInfo.js')
+	
+    const [result_qb_proj, result_flex_proj, result_dv] = await Promise.all([
+		await pool_qb_proj.exec('get_QB_proj', [app.settings.allplayers]),
+		await pool_qb_proj.exec('get_flex_proj', [app.settings.allplayers]),
+		await pool_qb_proj.exec('get_dv', [app.settings.allplayers])
+	])
+	let projections = [...result_qb_proj, result_flex_proj].flat()
+	projections = projections.map(proj => {
+		let dv = result_dv.find(x => x.id === proj.id)
+		let allplayers = app.settings.allplayers
+		return {
+			...proj,
+			value: dv === undefined ? 0 : dv.value,
+			updated_value: dv === undefined ? 0 : dv.value,
+			type: dv === undefined || dv.id === undefined ? 'P' : allplayers[dv.id].years_exp > 0 ? 'V' : 'R'
+		}
+	})
+    res.send([...projections, result_dv.filter(x => x.position === 'PI')].flat())
 })
 
 app.get('/leagues', async (req, res) => {
 	const username = req.query.username
-	const state = await axios.get(`https://api.sleeper.app/v1/state/nfl`, { timeout: 3000 }).catch(err => console.log(err))
+	const state = await axios.get(`https://api.sleeper.app/v1/state/nfl`, { timeout: 3000 })
 	const season = state.data.league_season
 	const poolLeagues = workerpool.pool(__dirname + '/workerLeagues.js')
 	const result = await poolLeagues.exec('getLeagues', [username, season])
-	res.send(result)
-})
-
-app.get('/drafts', async (req, res) => {
-	const username = req.query.username
-	const state = await axios.get(`https://api.sleeper.app/v1/state/nfl`, { timeout: 3000 }).catch(err => console.log(err))
-	const season = state.data.league_season
-	const poolDrafts = workerpool.pool(__dirname + '/workerDrafts.js')
-	const result = await poolDrafts.exec('getDrafts', [username, season])
 	res.send(result)
 })
 

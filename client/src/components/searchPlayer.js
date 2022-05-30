@@ -1,4 +1,3 @@
-import allPlayers from '../allplayers.json';
 import { useState, useEffect } from 'react';
 import './searchPlayer.css';
 
@@ -6,7 +5,7 @@ const SearchPlayer = (props) => {
     const [activePlayers, setActivePlayers] = useState([])
     const [playerSearched, setPlayerSearched] = useState('')
 
-    const getActivePlayers = (allplayers) => {
+    const getActivePlayers = (allPlayers) => {
         const activePlayers = Object.keys(allPlayers).filter(x => x === x.trim() && allPlayers[x].status === 'Active').map(player => {
             return {
                 id: player,
@@ -29,9 +28,9 @@ const SearchPlayer = (props) => {
     }
 
     useEffect(() => {
-        getActivePlayers(allPlayers)
+        getActivePlayers(props.allPlayers)
         props.sendPlayer(playerSearched)
-    }, [playerSearched])
+    }, [playerSearched, props.allPlayers])
 
 
     return <>

@@ -5,12 +5,14 @@ import View from './components/view';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/:username" element={<View />} />
-      </Routes>
-    </BrowserRouter>
+    <div className="App">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/:username" element={<View />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 }
 
