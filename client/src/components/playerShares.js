@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import emoji from '../emoji.png';
 import Roster from "./roster";
 import { motion } from 'framer-motion';
+import SearchPlayer from "./searchPlayer";
 
 const PlayerShares = (props) => {
     const [allPlayers, setAllPlayers] = useState(props.allPlayers)
@@ -15,7 +16,23 @@ const PlayerShares = (props) => {
         types: []
     })
 
-
+    const getPlayer = (data) => {
+        const p = players
+        console.log(data)
+        if (data) {
+            p.map(player => {
+                return player.isPlayerHidden = true
+            })
+            p.filter(x => x.id === data).map(player => {
+                return player.isPlayerHidden = false
+            })
+        } else {
+            p.map(player => {
+                return player.isPlayerHidden = false
+            })
+        }
+        setPlayers([...p])
+    }
 
     const showLeagues = (player_id) => {
         let p = players
@@ -227,6 +244,10 @@ const PlayerShares = (props) => {
                 <input className="clickable" name='R' onChange={(e) => filterYearsExp(e, 'Rookies')} defaultChecked type="checkbox" />
             </label>
         </div>
+        <SearchPlayer 
+            allPlayers={props.allPlayers}
+            sendPlayer={getPlayer}
+        />
         <table className="main">
             <tbody>
                 <tr>
@@ -240,7 +261,7 @@ const PlayerShares = (props) => {
                     <th colSpan={2} className="clickable" onClick={() => setSortBy('projection')}>Projection</th>
                 </tr>
 
-                {players.filter(x => !filters.types.includes(allPlayers[x.id].type) && !filters.positions.includes(allPlayers[x.id].position)).sort((a, b) => b[sortBy] - a[sortBy]).slice(0, players.filter(x => x.count > 0).length).map((player, index) =>
+                {players.filter(x => x.isPlayerHidden === false && !filters.types.includes(allPlayers[x.id].type) && !filters.positions.includes(allPlayers[x.id].position)).sort((a, b) => b[sortBy] - a[sortBy]).slice(0, players.filter(x => x.count > 0).length).map((player, index) =>
                     <React.Fragment key={index}>
                         <tr className={player.isLeaguesHidden ? 'hover clickable' : 'hover clickable active'} onClick={() => showLeagues(player.id)}>
                             <td >{player.count}</td>
