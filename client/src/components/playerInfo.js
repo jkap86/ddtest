@@ -66,7 +66,6 @@ const PlayerInfo = (props) => {
                 }
             })
             setPlayers(p.data)
-            setPlayersDisplay(p.data)
             setAllPlayers(props.allPlayers)
             props.sendPlayers(p.data)
             setPlayersDisplay(p.data.sort((a, b) => b[sortBy] > a[sortBy] ? 1 : -1))

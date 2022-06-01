@@ -6,6 +6,7 @@ const cors = require('cors')
 const axios = require('axios')
 const workerpool = require('workerpool')
 const axiosRetry = require('axios-retry')
+const Fuse = require('fuse.js')
 
 app.use(compression())
 app.use(cors());
@@ -14,7 +15,6 @@ app.use(express.static(path.resolve(__dirname, '../client/build')));
 
 const getAllPlayers = async () => {
     let allplayers = await axios.get('https://api.sleeper.app/v1/players/nfl', { timeout: 3000 })
-	let activePlayers = []
     
 	app.set('allplayers', allplayers.data)
 }
@@ -36,23 +36,28 @@ app.get('/user', async (req, res) => {
 app.get('/playerinfo', async (req, res) => {
     const pool_qb_proj = workerpool.pool(__dirname + '/workerPlayerInfo.js')
 	
-    const [result_qb_proj, result_flex_proj, result_dv] = await Promise.all([
-		await pool_qb_proj.exec('get_QB_proj', [app.settings.allplayers]),
-		await pool_qb_proj.exec('get_flex_proj', [app.settings.allplayers]),
+    const [result_proj, result_dv] = await Promise.all([
+		await pool_qb_proj.exec('get_proj', [app.settings.allplayers]),
 		await pool_qb_proj.exec('get_dv', [app.settings.allplayers])
 	])
-	let projections = [...result_qb_proj, result_flex_proj].flat()
-	projections = projections.map(proj => {
-		let dv = result_dv.find(x => x.id === proj.id)
-		let allplayers = app.settings.allplayers
+	let result = result_proj.map(proj => {
+		const value = result_dv.find(x => x.id === proj.id)
 		return {
 			...proj,
-			value: dv === undefined ? 0 : dv.value,
-			updated_value: dv === undefined ? 0 : dv.value,
-			type: dv === undefined || dv.id === undefined ? 'P' : allplayers[dv.id].years_exp > 0 ? 'V' : 'R'
+			value: value === undefined ? 0 : value.value,
+			updated_value: value === undefined ? 0 : value.value
 		}
 	})
-    res.send([...projections, result_dv.filter(x => x.position === 'PI')].flat())
+	result_dv.map(dv => {
+		if (result.find(x => x.id === dv.id) === undefined) {
+			result.push({
+				...dv,
+				fpts: 0,
+				updated_fpts: 0
+			})
+		}
+	})
+    res.send(result)
 })
 
 app.get('/leagues', async (req, res) => {
