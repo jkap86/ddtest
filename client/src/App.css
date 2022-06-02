@@ -293,3 +293,18 @@ p.header {
   color: var(--fifth-color);
   text-shadow: 0 0 .5em var(--primary-color);
 }
+.alert {
+  color: red;
+  font-size: 50%;
+  margin: auto;
+}
+button.home {
+  padding: .5em;
+  border-radius: 1em;
+  background-color: var(--secondary-color);
+  color: var(--third-color);
+  filter: brightness(2);
+  font-weight: 900;
+  font-size: 125%;
+  border: .1em solid var(--third-color);
+}

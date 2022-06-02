@@ -5,15 +5,19 @@ const Fuse = require('fuse.js')
 
 const get_proj = async (allPlayers) => {
     const ap = Object.keys(allPlayers).map(player => {
-        if (['QB', 'RB', 'WR', 'TE'].includes(allPlayers[player].position)) {
-            return allPlayers[player]
+        if (['QB', 'RB', 'WR', 'TE'].includes(allPlayers[player].position) && 
+            (allPlayers[player].active === true || allPlayers[player].status === 'Active')) {
+            return {
+                ...allPlayers[player],
+                searchName: allPlayers[player].search_full_name.replace(/[^0-9a-z]/gi, '').toLowerCase().replace('jr', '').replace('iii', '').replace('ii', '').trim()
+            }
         }
     })
     const options = {
         includeScore: true,
-        keys: ['search_full_name', 'position', 'team']
+        keys: ['searchName', 'team', 'position']
     }
-    const fuse = new Fuse(ap, options)
+    
     let projections = []
     const page_QB = await axios.get('https://www.fantasypros.com/nfl/projections/qb.php')
 
@@ -24,16 +28,14 @@ const get_proj = async (allPlayers) => {
         let fpts = $(element).find("td").last().text()
         let position = 'QB'
         name = name.join(' ')
-        let searchName = name.replace(/[^0-9a-z]/gi, '').toLowerCase().toLowerCase().replace('jr', '').replace('iii', '').replace('ii', '').trim()
-
-        const id_qb = fuse.search({
-            $or: [{ search_full_name: searchName }, { position: position }, { team: team }]
-        })
+        let searchName = name.toLowerCase().replace(' jr ', '').replace(' iii ', '').replace(' ii ', '').replace(/[^0-9a-z]/gi, '').trim()
+        const s = ap.filter(x => x !== undefined && x.position === position && x.team !== undefined && (x.team === null || x.team.slice(0, 2) === team.slice(0, 2)))
+        const fuse = new Fuse(s, options)
+        const id_qb = fuse.search(searchName)
         projections.push({
             id: id_qb[0].item.player_id,
             name: name,
             searchName: searchName,
-            search_full_name: allPlayers[id_qb] === undefined ? name : allPlayers[id_qb].search_full_name,
             team: team,
             fpts: Number((parseFloat(fpts) / 17).toFixed(2)),
             updated_fpts: Number((parseFloat(fpts) / 17).toFixed(2)),
@@ -53,16 +55,16 @@ const get_proj = async (allPlayers) => {
         let fpts = $(element).find("td").last().text()
         let position = $(element).find("td").eq(1).text().slice(0, 2).trim()
         name = name.join(' ')
-        let searchName = name.replace(/[^0-9a-z]/gi, '').toLowerCase().replace('jr', '').replace('iii', '').replace('ii', '').trim()
+        let searchName = name.toLowerCase().replace(' jr ', '').replace(' iii ', '').replace(' ii ', '').replace(/[^0-9a-z]/gi, '').trim()
+        const fuse = new Fuse(ap, options)
         const id_flex = fuse.search({
-            $or: [{ search_full_name: searchName }, { team: team }]
+            $or: [{ searchName: searchName }, { team, team }, { position: position }]
         })
 
         projections.push({
             id: id_flex[0].item.player_id,
             name: name,
             searchName: searchName,
-            search_full_name: allPlayers[id_flex] === undefined ? name : allPlayers[id_flex].search_full_name,
             team: team,
             fpts: Number((parseFloat(fpts) / 17).toFixed(2)),
             updated_fpts: Number((parseFloat(fpts) / 17).toFixed(2)),

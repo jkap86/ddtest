@@ -37,7 +37,7 @@ const Homepage = () => {
             <br /><br />
             {username === '' ? null : 
                 <Link to={`/${username}`}>
-                    <button type="submit">Submit</button>
+                    <button className="home clickable" type="submit">Submit</button>
                 </Link>
             }
         </div>

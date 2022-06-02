@@ -43,6 +43,7 @@ const Leagues = (props) => {
                     <th>Record</th>
                     <th>Win Pct</th>
                     <th colSpan={2}>Fantasy Points</th>
+                    <th></th>
                 </tr>
                 {leagues.sort((a, b) => a.index - b.index).map((league, index) =>
                     <React.Fragment key={index}>
@@ -50,9 +51,9 @@ const Leagues = (props) => {
                             <td>
                                 <motion.img
                                     animate={{ rotate: 360 }}
-                                    transition={{ 
-                                        repeat: Infinity, 
-                                        duration: Math.random() * 10 + 2 
+                                    transition={{
+                                        repeat: Infinity,
+                                        duration: Math.random() * 10 + 2
                                     }}
                                     alt='avatar'
                                     className='thumbnail'
@@ -63,10 +64,20 @@ const Leagues = (props) => {
                             <td>{league.wins}-{league.losses}{league.ties > 0 ? `-${league.ties}` : null}</td>
                             <td>{league.wins + league.losses > 0 ? (league.wins / (league.wins + league.losses)).toFixed(4) : '.0000'}</td>
                             <td colSpan={2}>{Number(league.fpts).toLocaleString("en-US")} - {Number(league.fpts_against).toLocaleString("en-US")}</td>
+                            <td>
+                                {league.starters.filter(x => x === '0').length > 0 ?
+                                    <p className='alert'>{league.starters.filter(x => x === '0').length} empty</p>
+                                    : null
+                                }
+                                {league.starters.filter(x => props.getProjection(x) === 0).length > 0 ? 
+                                    <p className='alert'>{league.starters.filter(x => props.getProjection(x) === 0).length} proj 0pts</p>
+                                    : null
+                                }
+                            </td>
                         </tr>
-                        {league.isRosterHidden ? null : 
+                        {league.isRosterHidden ? null :
                             <tr key={index + '_league'}>
-                                <td colSpan={8}>
+                                <td colSpan={9}>
                                     <League
                                         allPlayers={props.allPlayers}
                                         league={league}
